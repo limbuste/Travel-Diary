@@ -1,11 +1,22 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
-// Simple mock auth check - replace with real token check
 const isAdmin = () => {
-  return localStorage.getItem('isAdmin') === 'true'; // Example
+  return localStorage.getItem('isAdmin') === 'true';
 };
 
 export default function AdminRoute({ children }) {
-  return isAdmin() ? children : <Navigate to="/login" />;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('adminEmail');
+    navigate('/admin-login'); 
+  };
+
+  return isAdmin() ? (
+    React.cloneElement(children, { onLogout: handleLogout })
+  ) : (
+    <Navigate to="/admin-login" />
+  );
 }

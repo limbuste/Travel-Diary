@@ -5,8 +5,13 @@ export default function AdminLayout({ children }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear auth token, etc.
-    navigate('/login'); // Redirect to login after logout
+    if (props.onLogout) {
+    props.onLogout();
+  } else {
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('adminEmail');
+    navigate('/admin-login');
+  }
   };
 
   return (
